@@ -587,3 +587,12 @@ Created for SMP servers that want to preserve player memories, community milesto
 
 MemoryBook turns your server into a living archive.
 
+## License
+
+This project is licensed under the MIT License.
+
+You are free to use, modify, and distribute this plugin, as long as the original copyright notice and license are included.
+
+See the [LICENSE](LICENSE) file for details.
+
+
