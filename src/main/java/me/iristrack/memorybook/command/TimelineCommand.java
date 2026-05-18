@@ -2,13 +2,14 @@ package me.iristrack.memorybook.command;
 
 import me.iristrack.memorybook.model.MemoryEvent;
 import me.iristrack.memorybook.service.MemoryService;
-import me.iristrack.memorybook.util.TextUtil;
+import me.iristrack.memorybook.util.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Map;
 
 public class TimelineCommand implements CommandExecutor {
     private final JavaPlugin plugin;
@@ -32,17 +33,29 @@ public class TimelineCommand implements CommandExecutor {
         int from = (page - 1) * pageSize;
         int to = Math.min(events.size(), from + pageSize);
 
-        TextUtil.send(sender, "&d===== Timeline - " + memoryService.storage().currentSeason() + " &7(" + page + "/" + maxPage + ") &d=====");
+        MessageUtil.send(sender, "timeline.header", Map.of(
+                "season", memoryService.storage().currentSeason(),
+                "page", String.valueOf(page),
+                "max_page", String.valueOf(maxPage)
+        ));
         if (events.isEmpty()) {
-            TextUtil.send(sender, "&7Chưa có trang lịch sử nào.");
+            MessageUtil.send(sender, "timeline.empty");
             return true;
         }
         for (int i = from; i < to; i++) {
             MemoryEvent e = events.get(i);
-            TextUtil.send(sender, "&8#" + e.id() + " &7Day " + e.serverDay() + " &f" + e.type().icon() + " " + e.rarity().color() + e.title());
-            TextUtil.send(sender, "&8  ↳ &7" + e.description());
+            MessageUtil.send(sender, "timeline.entry", Map.of(
+                    "id", String.valueOf(e.id()),
+                    "day", String.valueOf(e.serverDay()),
+                    "icon", e.type().icon(),
+                    "rarity_color", e.rarity().color().toString(),
+                    "title", e.title()
+            ));
+            MessageUtil.send(sender, "timeline.description", Map.of("description", e.description()));
         }
-        TextUtil.send(sender, "&7Dùng &f/timeline " + (page + 1) + " &7để xem trang tiếp theo.");
+        if (page < maxPage) {
+            MessageUtil.send(sender, "timeline.next-page", Map.of("next_page", String.valueOf(page + 1)));
+        }
         return true;
     }
 }

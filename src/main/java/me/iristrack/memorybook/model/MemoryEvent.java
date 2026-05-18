@@ -72,6 +72,11 @@ public class MemoryEvent {
         return world + " x:" + x.intValue() + " y:" + y.intValue() + " z:" + z.intValue();
     }
 
+    public Location toLocation() {
+        if (world == null || x == null || y == null || z == null || Bukkit.getWorld(world) == null) return null;
+        return new Location(Bukkit.getWorld(world), x, y, z);
+    }
+
     public String dateText() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 .withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(createdAt));

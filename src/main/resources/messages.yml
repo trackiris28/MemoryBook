@@ -1,9 +1,124 @@
+prefix: "&d&lMemoryBook &8> &r"
+
 help:
   - "&dMemoryBook commands:"
-  - "&f/timeline [page] &7- Xem timeline SMP"
-  - "&f/history &7- Mở GUI lịch sử"
-  - "&f/book &7- Nhận sách Memory Book"
-  - "&f/memory profile <player> &7- Xem ký ức của người chơi"
-  - "&f/memory add <type> <title> | <description> &7- Admin thêm sự kiện"
-  - "&f/memory remove <id> &7- Admin xóa sự kiện"
-  - "&f/memory reload &7- Reload config và data"
+  - "&f/timeline [page] &7- View the SMP timeline."
+  - "&f/history &7- Open the history GUI."
+  - "&f/book &7- Receive the Memory Book."
+  - "&f/memory list &7- View recent memories."
+  - "&f/memory profile <player> &7- View a player's memories."
+  - "&f/memory top &7- View the Memory Points leaderboard."
+  - "&f/memory points [player] &7- View Memory Points."
+  - "&f/memory add <type> <title> | <description> &7- Add a memory."
+  - "&f/memory edit <id> <title> | <description> &7- Edit a memory."
+  - "&f/memory remove <id> &7- Remove a memory."
+  - "&f/memory reload &7- Reload config, messages, and data."
+  - "&f/memory season start <name> &7- Start a season."
+  - "&f/memory season end &7- End the active season."
+
+commands:
+  player-only: "&cThis command can only be used in game."
+  no-permission: "&cYou do not have permission to use this command."
+  unknown: "&cUnknown command. Use /memory for help."
+
+memory:
+  usage-add: "&cUsage: /memory add <type> <title> | <description>"
+  usage-edit: "&cUsage: /memory edit <id> <title> | <description>"
+  usage-remove: "&cUsage: /memory remove <id>"
+  usage-profile: "&cUsage: /memory profile <player>"
+  usage-points-console: "&cConsole usage: /memory points <player>"
+  added: "&aAdded memory #%id%: &f%title%"
+  edited: "&aEdited memory #%id%: &f%title%"
+  removed: "&aRemoved memory #%id%."
+  not-found: "&cMemory #%id% was not found."
+  invalid-id: "&cThe id must be a number."
+  reloaded: "&aMemoryBook has been reloaded."
+  empty: "&7No memories have been recorded yet."
+  list-header: "&d===== Recent Memories ====="
+  list-entry: "&8#%id% &f%icon% %title% &8- &7%players%"
+  points: "&d%player% &7has &f%points% &7Memory Points."
+
+profile:
+  header: "&d===== Memories of %player% ====="
+  points: "&7Memory Points: &f%points%"
+  empty: "&7This player has no memories yet."
+  entry: "&8#%id% &7Day %day% &f%icon% %title%"
+
+top:
+  header: "&d===== MemoryBook Top ====="
+  empty: "&7No point data is available yet."
+  entry: "&f%player% &7- &d%points% points"
+
+season:
+  usage: "&cUsage: /memory season start <name> or /memory season end"
+  started: "&aCurrent season set to: &f%season%"
+  ended: "&aThe active season has been ended."
+
+timeline:
+  header: "&d===== Timeline - %season% &7(%page%/%max_page%) &d====="
+  empty: "&7No history pages have been written yet."
+  entry: "&8#%id% &7Day %day% &f%icon% %rarity_color%%title%"
+  description: "&8  -> &7%description%"
+  next-page: "&7Use &f/timeline %next_page% &7to view the next page."
+
+book:
+  title: "Memory Book"
+  author: "SMP Server"
+  received: "&dYou received the &fMemory Book&d."
+  intro-page: "&0&lMemory Book\n\n&0Season: %season%\n\n&0This book records the important history of the SMP."
+  event-page: "&0%icon% &l%title%\n\n&0Day: %day%\nPlayers: %players%\nTime: %time%\nRarity: %rarity%\n\n%description%"
+
+gui:
+  title: "&5Memory Book History"
+  all-timeline-name: "&dAll Timeline"
+  all-timeline-lore:
+    - "&7Use &f/timeline &7for paged history."
+  type-name: "&f%icon% %type%"
+  type-count: "&7Events: &f%count%"
+  type-preview: "&8#%id% &f%title%"
+  click-view: "&eClick to print recent entries"
+  chat-header: "&d===== %icon% %type% ====="
+  chat-entry: "&8#%id% &7Day %day% &f%title% &8- &7%description%"
+
+rewards:
+  points: "&d+%points% Memory Points"
+  title-unlocked: "&fYou unlocked the title: &e%title%"
+
+broadcast:
+  line: "&8===================="
+  created: "&fA new page of history has been written!"
+  title: "&f%icon% %rarity_color%%title%"
+  description: "&7%description%"
+
+events:
+  community-name: "the server community"
+  FIRST_JOIN:
+    title: "First player joined the server"
+    description: "%player% became the first player written into this season history."
+  FIRST_NETHER:
+    title: "The Nether portal opened"
+    description: "%player% was the first player to step into the Nether."
+  FIRST_END:
+    title: "The End was discovered"
+    description: "%player% was the first player to step into The End."
+  FIRST_DRAGON_KILL:
+    title: "The Dragon fell"
+    description: "The Ender Dragon was defeated by %players%."
+  FIRST_WITHER_KILL:
+    title: "The first Wither fell"
+    description: "The first Wither of the season was defeated by %players%."
+  FIRST_ELYTRA:
+    title: "First Elytra found"
+    description: "%player% found the first Elytra of the season."
+  FIRST_WARDEN_DEATH:
+    title: "The Warden claimed its first victim"
+    description: "%player% became the first player to die to a Warden."
+  FULL_NETHERITE:
+    title: "Full Netherite unlocked"
+    description: "%player% completed a full Netherite armor set."
+  LEVEL_100:
+    title: "Level 100 reached"
+    description: "%player% reached level 100."
+  SURVIVED_100_DAYS:
+    title: "100 days survived"
+    description: "%player% survived 100 Minecraft days without dying."

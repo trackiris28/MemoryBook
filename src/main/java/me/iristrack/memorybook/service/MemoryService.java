@@ -4,22 +4,24 @@ import me.iristrack.memorybook.model.MemoryEvent;
 import me.iristrack.memorybook.model.MemoryRarity;
 import me.iristrack.memorybook.model.MemoryType;
 import me.iristrack.memorybook.storage.MemoryStorage;
-import me.iristrack.memorybook.util.TextUtil;
+import me.iristrack.memorybook.util.MessageUtil;
+import me.iristrack.memorybook.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MemoryService {
-    private final JavaPlugin plugin;
+    private final Main plugin;
     private final MemoryStorage storage;
 
-    public MemoryService(JavaPlugin plugin, MemoryStorage storage) {
+    public MemoryService(Main plugin, MemoryStorage storage) {
         this.plugin = plugin;
         this.storage = storage;
     }
@@ -28,7 +30,7 @@ public class MemoryService {
 
     public MemoryEvent createMemory(MemoryType type, MemoryRarity rarity, String title, String description,
                                     List<Player> players, Location location, boolean firstOnly) {
-        if (firstOnly && storage.hasType(type)) return null;
+        if (firstOnly && storage.hasTypeInSeason(type, storage.currentSeason())) return null;
 
         List<UUID> uuids = new ArrayList<>();
         List<String> names = new ArrayList<>();
@@ -41,9 +43,7 @@ public class MemoryService {
         }
 
         long serverDay = 0L;
-        if (location != null && location.getWorld() != null) {
-            serverDay = location.getWorld().getFullTime() / 24000L;
-        }
+        if (location != null && location.getWorld() != null) serverDay = location.getWorld().getFullTime() / 24000L;
 
         MemoryEvent event = new MemoryEvent(
                 storage.nextId(), type, rarity == null ? type.defaultRarity() : rarity,
@@ -53,12 +53,20 @@ public class MemoryService {
         storage.add(event);
         rewardPlayers(event);
         announce(event);
+        if (plugin.discordSrvHook() != null) plugin.discordSrvHook().sendMemoryCreated(event);
         return event;
     }
 
     public MemoryEvent createCustom(MemoryType type, String title, String description, Player actor) {
         return createMemory(type, type.defaultRarity(), title, description,
                 actor == null ? List.of() : List.of(actor), actor == null ? null : actor.getLocation(), false);
+    }
+
+    public List<MemoryEvent> latest(int limit) {
+        return storage.all().stream()
+                .sorted(Comparator.comparingInt(MemoryEvent::id).reversed())
+                .limit(limit)
+                .toList();
     }
 
     private void rewardPlayers(MemoryEvent event) {
@@ -68,21 +76,23 @@ public class MemoryService {
         for (UUID uuid : event.playerUuids()) {
             storage.addMemoryPoints(uuid, points);
             Player player = Bukkit.getPlayer(uuid);
-            if (player != null) {
-                if (points > 0) TextUtil.send(player, "&d+" + points + " Memory Points");
-                if (!title.isBlank()) TextUtil.send(player, "&fBạn đã mở khóa danh hiệu: &e" + title);
-                player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.2f);
-            }
+            if (player == null) continue;
+            if (points > 0) MessageUtil.send(player, "rewards.points", Map.of("points", String.valueOf(points)));
+            if (!title.isBlank()) MessageUtil.send(player, "rewards.title-unlocked", Map.of("title", title));
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.2f);
         }
     }
 
     private void announce(MemoryEvent event) {
         if (!plugin.getConfig().getBoolean("settings.broadcast-new-memory", true)) return;
-        String prefix = plugin.getConfig().getString("messages.prefix", "&dMemoryBook &8» &r");
-        Bukkit.broadcastMessage(TextUtil.color("&8━━━━━━━━━━━━━━━━━━━━"));
-        Bukkit.broadcastMessage(TextUtil.color(prefix + "&fMột trang lịch sử mới đã được viết!"));
-        Bukkit.broadcastMessage(TextUtil.color(event.type().icon() + " " + event.rarity().color() + event.title()));
-        Bukkit.broadcastMessage(TextUtil.color("&7" + event.description()));
-        Bukkit.broadcastMessage(TextUtil.color("&8━━━━━━━━━━━━━━━━━━━━"));
+        Bukkit.broadcastMessage(MessageUtil.get("broadcast.line"));
+        Bukkit.broadcastMessage(MessageUtil.get("prefix") + MessageUtil.get("broadcast.created"));
+        Bukkit.broadcastMessage(MessageUtil.get("broadcast.title", Map.of(
+                "icon", event.type().icon(),
+                "rarity_color", event.rarity().color().toString(),
+                "title", event.title()
+        )));
+        Bukkit.broadcastMessage(MessageUtil.get("broadcast.description", Map.of("description", event.description())));
+        Bukkit.broadcastMessage(MessageUtil.get("broadcast.line"));
     }
 }

@@ -1,9 +1,11 @@
 name: MemoryBook
 version: '1.0.0'
 main: me.iristrack.memorybook.Main
-api-version: '1.20'
+api-version: '1.21'
 author: iris.track28
 description: Automatic SMP history, timeline, and written book plugin.
+softdepend:
+  - DiscordSRV
 commands:
   timeline:
     description: View the SMP timeline.
@@ -17,7 +19,7 @@ commands:
     usage: /book
   memory:
     description: Admin and player MemoryBook commands.
-    usage: /memory <add|remove|list|profile|reload|season>
+    usage: /memory <add|edit|remove|list|profile|top|reload|season>
 permissions:
   memorybook.admin:
     description: Allows managing MemoryBook events.

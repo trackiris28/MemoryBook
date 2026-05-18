@@ -56,10 +56,24 @@ public class YamlMemoryStorage implements MemoryStorage {
     @Override
     public MemoryEvent add(MemoryEvent event) {
         events.put(event.id(), event);
+        yaml.set("events." + event.id(), null);
         event.toSection(yaml);
         yaml.set("meta.next-id", Math.max(yaml.getInt("meta.next-id", 1), event.id() + 1));
         save();
         return event;
+    }
+
+    @Override
+    public MemoryEvent replaceText(int id, String title, String description) {
+        MemoryEvent old = events.get(id);
+        if (old == null) return null;
+        MemoryEvent updated = new MemoryEvent(
+                old.id(), old.type(), old.rarity(), title, description,
+                old.playerUuids(), old.playerNames(), old.toLocation(),
+                old.serverDay(), old.createdAt(), old.season()
+        );
+        add(updated);
+        return updated;
     }
 
     @Override
@@ -96,6 +110,11 @@ public class YamlMemoryStorage implements MemoryStorage {
 
     @Override
     public boolean hasType(MemoryType type) { return events.values().stream().anyMatch(e -> e.type() == type); }
+
+    @Override
+    public boolean hasTypeInSeason(MemoryType type, String season) {
+        return events.values().stream().anyMatch(e -> e.type() == type && e.season().equalsIgnoreCase(season));
+    }
 
     @Override
     public int nextId() { return yaml.getInt("meta.next-id", 1); }

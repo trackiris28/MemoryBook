@@ -2,6 +2,7 @@ package me.iristrack.memorybook.listener;
 
 import me.iristrack.memorybook.model.MemoryType;
 import me.iristrack.memorybook.service.MemoryService;
+import me.iristrack.memorybook.util.MessageUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BossKillListener implements Listener {
     private final JavaPlugin plugin;
@@ -32,19 +34,20 @@ public class BossKillListener implements Listener {
         if (entity instanceof EnderDragon) {
             List<Player> players = nearbyPlayers(entity.getLocation(), plugin.getConfig().getDouble("settings.dragon-assist-radius", 80.0));
             if (players.isEmpty() && killer != null) players = List.of(killer);
-            String names = players.isEmpty() ? "cộng đồng server" : String.join(", ", players.stream().map(Player::getName).toList());
-            memoryService.createMemory(MemoryType.FIRST_DRAGON_KILL, null,
-                    "Kỷ nguyên End bắt đầu",
-                    "Ender Dragon đã bị đánh bại bởi " + names + ".",
-                    players, entity.getLocation(), true);
+            create(MemoryType.FIRST_DRAGON_KILL, players, entity.getLocation());
         } else if (entity instanceof Wither) {
             List<Player> players = killer == null ? nearbyPlayers(entity.getLocation(), 40.0) : List.of(killer);
-            String names = players.isEmpty() ? "cộng đồng server" : String.join(", ", players.stream().map(Player::getName).toList());
-            memoryService.createMemory(MemoryType.FIRST_WITHER_KILL, null,
-                    "Wither đầu tiên sụp đổ",
-                    "Wither đầu tiên của mùa SMP đã bị đánh bại bởi " + names + ".",
-                    players, entity.getLocation(), true);
+            create(MemoryType.FIRST_WITHER_KILL, players, entity.getLocation());
         }
+    }
+
+    private void create(MemoryType type, List<Player> players, Location location) {
+        String names = players.isEmpty() ? MessageUtil.get("events.community-name") : String.join(", ", players.stream().map(Player::getName).toList());
+        Map<String, String> placeholders = Map.of("players", names);
+        memoryService.createMemory(type, null,
+                MessageUtil.get("events." + type.name() + ".title", placeholders),
+                MessageUtil.get("events." + type.name() + ".description", placeholders),
+                players, location, true);
     }
 
     private List<Player> nearbyPlayers(Location location, double radius) {

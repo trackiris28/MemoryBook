@@ -1,5 +1,6 @@
 settings:
   current-season: "SMP Season 1"
+  inactive-season-name: "No Active Season"
   broadcast-new-memory: true
   save-coordinates: true
   enable-book-item: true
@@ -7,6 +8,18 @@ settings:
   max-book-events: 60
   timeline-page-size: 8
   dragon-assist-radius: 80.0
+
+discord:
+  enabled: false
+  use-discordsrv: true
+  channel: "global"
+  send-memory-created: true
+  send-season-start: true
+  send-season-end: true
+  format:
+    memory-created: "**📖 Memory Book Updated**\n{icon} **{title}**\n{description}\n👤 Player: `{players}`\n🗓 Season: `{season}`"
+    season-start: "**MemoryBook Season Started**\nSeason: `{season}`"
+    season-end: "**MemoryBook Season Ended**\nSeason: `{season}`"
 
 rewards:
   enabled: true
@@ -16,6 +29,11 @@ rewards:
     FIRST_END: 15
     FIRST_DRAGON_KILL: 40
     FIRST_WITHER_KILL: 25
+    FIRST_ELYTRA: 35
+    FIRST_WARDEN_DEATH: 10
+    FULL_NETHERITE: 20
+    LEVEL_100: 20
+    SURVIVED_100_DAYS: 20
     CUSTOM: 0
 
 titles:
@@ -24,8 +42,8 @@ titles:
   FIRST_END: "End Explorer"
   FIRST_DRAGON_KILL: "Dragon Slayer"
   FIRST_WITHER_KILL: "Wither Hunter"
-
-messages:
-  prefix: "&d&lMemoryBook &8» &r"
-  memory-created: "&fMột trang lịch sử mới đã được viết: &e%title%"
-  no-permission: "&cBạn không có quyền dùng lệnh này."
+  FIRST_ELYTRA: "Sky Pioneer"
+  FIRST_WARDEN_DEATH: "Deep Dark Lesson"
+  FULL_NETHERITE: "Netherite Champion"
+  LEVEL_100: "Level Master"
+  SURVIVED_100_DAYS: "Centurion"

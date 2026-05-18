@@ -11,12 +11,14 @@ public interface MemoryStorage {
     void reload();
     void save();
     MemoryEvent add(MemoryEvent event);
+    MemoryEvent replaceText(int id, String title, String description);
     boolean remove(int id);
     List<MemoryEvent> all();
     List<MemoryEvent> byType(MemoryType type);
     List<MemoryEvent> byPlayer(UUID playerUuid, String playerName);
     Optional<MemoryEvent> byId(int id);
     boolean hasType(MemoryType type);
+    boolean hasTypeInSeason(MemoryType type, String season);
     int nextId();
     void setSeason(String season);
     String currentSeason();
