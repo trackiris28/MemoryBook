@@ -1,0 +1,31 @@
+settings:
+  current-season: "SMP Season 1"
+  broadcast-new-memory: true
+  save-coordinates: true
+  enable-book-item: true
+  enable-gui: true
+  max-book-events: 60
+  timeline-page-size: 8
+  dragon-assist-radius: 80.0
+
+rewards:
+  enabled: true
+  memory-points:
+    FIRST_JOIN: 5
+    FIRST_NETHER: 10
+    FIRST_END: 15
+    FIRST_DRAGON_KILL: 40
+    FIRST_WITHER_KILL: 25
+    CUSTOM: 0
+
+titles:
+  FIRST_JOIN: "Founder"
+  FIRST_NETHER: "Nether Pioneer"
+  FIRST_END: "End Explorer"
+  FIRST_DRAGON_KILL: "Dragon Slayer"
+  FIRST_WITHER_KILL: "Wither Hunter"
+
+messages:
+  prefix: "&d&lMemoryBook &8» &r"
+  memory-created: "&fMột trang lịch sử mới đã được viết: &e%title%"
+  no-permission: "&cBạn không có quyền dùng lệnh này."

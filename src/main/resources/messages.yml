@@ -1,0 +1,9 @@
+help:
+  - "&dMemoryBook commands:"
+  - "&f/timeline [page] &7- Xem timeline SMP"
+  - "&f/history &7- Mở GUI lịch sử"
+  - "&f/book &7- Nhận sách Memory Book"
+  - "&f/memory profile <player> &7- Xem ký ức của người chơi"
+  - "&f/memory add <type> <title> | <description> &7- Admin thêm sự kiện"
+  - "&f/memory remove <id> &7- Admin xóa sự kiện"
+  - "&f/memory reload &7- Reload config và data"
